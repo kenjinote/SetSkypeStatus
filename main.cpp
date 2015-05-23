@@ -11,7 +11,7 @@ DWORD SendSkypeMessage(HWND hWnd, HWND hGlobal_SkypeAPIWindowHandle, LPCSTR szMe
 {
 	COPYDATASTRUCT oCopyData;
 	oCopyData.dwData = 0;
-	oCopyData.lpData = (void *)szMessage;
+	oCopyData.lpData = (void*)szMessage;
 	oCopyData.cbData = lstrlenA(szMessage) + 1;
 	return SendMessage(hGlobal_SkypeAPIWindowHandle, WM_COPYDATA, (WPARAM)hWnd, (LPARAM)&oCopyData);
 }
@@ -26,6 +26,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_COPYDATA:
 		if (hGlobal_SkypeAPIWindowHandle == (HWND)wParam)
 		{
+#ifdef _DEBUG
+			COPYDATASTRUCT*pCopyData = (COPYDATASTRUCT*)lParam;
+			LPSTR lpszText = (LPSTR)GlobalAlloc(0, pCopyData->cbData);
+			lstrcpyA(lpszText, (LPSTR)(pCopyData->lpData));
+			OutputDebugStringA(lpszText);
+			OutputDebugString(TEXT("\r\n"));
+#endif
 			return 1;
 		}
 		break;
