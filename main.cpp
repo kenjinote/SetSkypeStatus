@@ -1,7 +1,4 @@
 #pragma comment(lib,"wtsapi32")
-
-#define _WIN32_WINNT 0x0501
-#pragma comment(linker,"/opt:nowin98")
 #include<windows.h>
 #include<wtsapi32.h>
 
