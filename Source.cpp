@@ -1,10 +1,10 @@
-#pragma comment(lib,"wtsapi32")
-#include<windows.h>
-#include<wtsapi32.h>
+Ôªø#pragma comment(lib,"wtsapi32")
+#include <windows.h>
+#include <wtsapi32.h>
 
 TCHAR szClassName[] = TEXT("SetSkypeStatus");
 
-DWORD SendSkypeMessage(HWND hWnd, HWND hGlobal_SkypeAPIWindowHandle, LPCSTR szMessage)
+DWORD_PTR SendSkypeMessage(HWND hWnd, HWND hGlobal_SkypeAPIWindowHandle, LPCSTR szMessage)
 {
 	COPYDATASTRUCT oCopyData;
 	oCopyData.dwData = 0;
@@ -85,22 +85,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						}
 					}
 				}
-				(b = SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS ONLINE")) &&
-					(b = SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, szComputerName));
+				(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS ONLINE")) &&
+					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, szComputerName));
 			}
-				break;
+			break;
 			case WTS_REMOTE_DISCONNECT:
-				(b = SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS AWAY")) &&
-					(b = SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET PROFILE MOOD_TEXT"));
+				(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS AWAY")) &&
+					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET PROFILE MOOD_TEXT"));
 				break;
 			}
-			if (!b)//ëóêMÇ™É~ÉXÇ¡ÇΩèÍçá
+			if (!b)//ÈÄÅ‰ø°„Åå„Éü„Çπ„Å£„ÅüÂ†¥Âêà
 			{
 				SendMessage(HWND_BROADCAST, uiGlobal_MsgID_SkypeControlAPIDiscover, (WPARAM)hWnd, 0);
 			}
 		}
 	}
-		break;
+	break;
 	case WM_DESTROY:
 		if (hGlobal_SkypeAPIWindowHandle)
 		{
@@ -126,16 +126,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
-EXTERN_C void __cdecl WinMainCRTStartup()
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR pCmdLine, int nCmdShow)
 {
 	MSG msg = { 0 };
 	HANDLE hMutex = CreateMutex(NULL, FALSE, szClassName);
 	if (GetLastError() != ERROR_ALREADY_EXISTS)
 	{
-		HINSTANCE hInstance = GetModuleHandle(0);
-		WNDCLASS wndclass = { 0, WndProc, 0, 0, hInstance, 0, 0, 0, 0, szClassName };
+		WNDCLASS wndclass = {
+		0,
+		WndProc,
+		0,
+		0,
+		hInstance,
+		0,
+		0,
+		0,
+		0,
+		szClassName
+		};
 		RegisterClass(&wndclass);
-		CreateWindowEx(WS_EX_TOOLWINDOW, szClassName, 0, 0, 0, 0, 0, 0, 0, 0, hInstance, 0);
+		HWND hWnd = CreateWindowEx(
+			WS_EX_TOOLWINDOW,
+			szClassName,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			hInstance,
+			0
+		);
 		while (GetMessage(&msg, 0, 0, 0))
 		{
 			TranslateMessage(&msg);
@@ -144,8 +168,5 @@ EXTERN_C void __cdecl WinMainCRTStartup()
 		ReleaseMutex(hMutex);
 	}
 	CloseHandle(hMutex);
-	ExitProcess(msg.wParam);
+	return (int)msg.wParam;
 }
-#if _DEBUG
-void main(){}
-#endif
