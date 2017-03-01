@@ -37,7 +37,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		uiGlobal_MsgID_SkypeControlAPIAttach = RegisterWindowMessageA("SkypeControlAPIAttach");
 		uiGlobal_MsgID_SkypeControlAPIDiscover = RegisterWindowMessageA("SkypeControlAPIDiscover");
 		if (uiGlobal_MsgID_SkypeControlAPIAttach == 0 || uiGlobal_MsgID_SkypeControlAPIDiscover == 0)return -1;
-
 		while (!hGlobal_SkypeAPIWindowHandle)
 		{
 			SendMessage(HWND_BROADCAST, uiGlobal_MsgID_SkypeControlAPIDiscover, (WPARAM)hWnd, 0);
@@ -50,57 +49,56 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				DispatchMessage(&msg);
 			}
 		}
-
 		PostMessage(hWnd, WM_WTSSESSION_CHANGE, WTS_REMOTE_CONNECT, 0);
-
 		WTSRegisterSessionNotification(hWnd, NOTIFY_FOR_ALL_SESSIONS);
 		break;
 	case WM_WTSSESSION_CHANGE:
-	{
-		if (hGlobal_SkypeAPIWindowHandle)
 		{
-			BOOL b = TRUE;
-			switch (wParam)
+			if (hGlobal_SkypeAPIWindowHandle)
 			{
-			case WTS_REMOTE_CONNECT:
-			{
-				CHAR szComputerName[MAX_PATH];
-				lstrcpyA(szComputerName, "SET PROFILE MOOD_TEXT");
-				PWTS_SESSION_INFO ppSessionInfo = 0;
-				DWORD pCount;
-				if (WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &ppSessionInfo, &pCount))
+				BOOL b = TRUE;
+				switch (wParam)
 				{
-					for (unsigned int i = 0; i<pCount; i++)
+				case WTS_REMOTE_CONNECT:
+				{
+					CHAR szComputerName[MAX_PATH];
+					lstrcpyA(szComputerName, "SET PROFILE MOOD_TEXT");
+					PWTS_SESSION_INFO ppSessionInfo = 0;
+					DWORD pCount;
+					if (WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &ppSessionInfo, &pCount))
 					{
-						if (lstrcmp(ppSessionInfo[i].pWinStationName, TEXT("RDP-Tcp#0")) == 0)
+						for (unsigned int i = 0; i<pCount; i++)
 						{
-							DWORD bytesReturned = 0;
-							LPSTR pData = 0;
-							if (WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, ppSessionInfo[i].SessionId, WTSClientName, &pData, &bytesReturned))
+							if (lstrcmp(ppSessionInfo[i].pWinStationName, TEXT("RDP-Tcp#0")) == 0)
 							{
-								lstrcatA(szComputerName, " ");
-								lstrcatA(szComputerName, pData);
+								DWORD bytesReturned = 0;
+								LPSTR pData = 0;
+								if (WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, ppSessionInfo[i].SessionId, WTSClientName, &pData, &bytesReturned))
+								{
+									lstrcatA(szComputerName, " ");
+									lstrcatA(szComputerName, pData);
+								}
+								WTSFreeMemory(pData);
 							}
-							WTSFreeMemory(pData);
 						}
+						WTSFreeMemory(ppSessionInfo);
 					}
+					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS ONLINE")) &&
+						(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, szComputerName));
 				}
-				(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS ONLINE")) &&
-					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, szComputerName));
-			}
-			break;
-			case WTS_REMOTE_DISCONNECT:
-				(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS AWAY")) &&
-					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET PROFILE MOOD_TEXT"));
 				break;
-			}
-			if (!b)//送信がミスった場合
-			{
-				SendMessage(HWND_BROADCAST, uiGlobal_MsgID_SkypeControlAPIDiscover, (WPARAM)hWnd, 0);
+				case WTS_REMOTE_DISCONNECT:
+					(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET USERSTATUS AWAY")) &&
+						(b = (BOOL)SendSkypeMessage(hWnd, hGlobal_SkypeAPIWindowHandle, "SET PROFILE MOOD_TEXT"));
+					break;
+				}
+				if (!b)//送信がミスった場合
+				{
+					SendMessage(HWND_BROADCAST, uiGlobal_MsgID_SkypeControlAPIDiscover, (WPARAM)hWnd, 0);
+				}
 			}
 		}
-	}
-	break;
+		break;
 	case WM_DESTROY:
 		if (hGlobal_SkypeAPIWindowHandle)
 		{
