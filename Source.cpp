@@ -81,6 +81,10 @@ VOID Login(LPCWSTR lpszStatusName)
 	HWND hSkypeWnd = GetSkypeWindow();
 	if (hSkypeWnd)
 	{
+		RECT rect;
+		GetWindowRect(hSkypeWnd, &rect);
+		int x = rect.left, y = rect.top;
+		SetWindowPos(hSkypeWnd, 0, 9999, 0, 0, 0, SWP_NOSIZE | SWP_NOSENDCHANGING);
 		SetForegroundWindow(hSkypeWnd);
 		HWND hRenderWidgetWnd = FindWindowEx(hSkypeWnd, NULL, TEXT("Chrome_RenderWidgetHostHWND"), NULL);
 		if (hRenderWidgetWnd == NULL)
@@ -95,6 +99,8 @@ VOID Login(LPCWSTR lpszStatusName)
 		}
 		if (hRenderWidgetWnd)
 		{
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
 
@@ -103,8 +109,12 @@ VOID Login(LPCWSTR lpszStatusName)
 			SendMessage(hRenderWidgetWnd, WM_LBUTTONDOWN, 0, MAKELPARAM(1, 1));
 			SendMessage(hRenderWidgetWnd, WM_LBUTTONUP, 0, MAKELPARAM(1, 1));
 
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_SPACE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_SPACE, 0);
@@ -114,11 +124,17 @@ VOID Login(LPCWSTR lpszStatusName)
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
 
-			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
-			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
+
+			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
+			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			if (lpszStatusName)
 			{
@@ -130,8 +146,12 @@ VOID Login(LPCWSTR lpszStatusName)
 				}
 			}
 
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_SPACE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_SPACE, 0);
@@ -141,8 +161,12 @@ VOID Login(LPCWSTR lpszStatusName)
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DOWN, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DOWN, 0);
 
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_RETURN, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_RETURN, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
@@ -151,8 +175,10 @@ VOID Login(LPCWSTR lpszStatusName)
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
-		}
 
+			Sleep(100);
+		}
+		SetWindowPos(hSkypeWnd, 0, x, y, 0, 0, SWP_NOSIZE | SWP_NOSENDCHANGING);
 		SendMessage(hSkypeWnd, WM_CLOSE, 0, 0);
 	}
 }
@@ -162,6 +188,10 @@ VOID Logout()
 	HWND hSkypeWnd = GetSkypeWindow();
 	if (hSkypeWnd)
 	{
+		RECT rect;
+		GetWindowRect(hSkypeWnd, &rect);
+		int x = rect.left, y = rect.top;
+		SetWindowPos(hSkypeWnd, 0, 9999, 0, 0, 0, SWP_NOSIZE | SWP_NOSENDCHANGING);
 		SetForegroundWindow(hSkypeWnd);
 		HWND hRenderWidgetWnd = FindWindowEx(hSkypeWnd, NULL, TEXT("Chrome_RenderWidgetHostHWND"), NULL);
 		if (hRenderWidgetWnd == NULL)
@@ -176,6 +206,8 @@ VOID Logout()
 		}
 		if (hRenderWidgetWnd)
 		{
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
 
@@ -184,8 +216,12 @@ VOID Logout()
 			SendMessage(hRenderWidgetWnd, WM_LBUTTONDOWN, 0, MAKELPARAM(1, 1));
 			SendMessage(hRenderWidgetWnd, WM_LBUTTONUP, 0, MAKELPARAM(1, 1));
 
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_SPACE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_SPACE, 0);
@@ -195,17 +231,27 @@ VOID Logout()
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
 
-			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
-			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
+
+			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
+			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DELETE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DELETE, 0);
 
+			Sleep(100);
+
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_TAB, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_TAB, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_SPACE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_SPACE, 0);
@@ -215,14 +261,22 @@ VOID Logout()
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DOWN, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DOWN, 0);
 
-			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DOWN, 0);
-			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DOWN, 0);
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DOWN, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DOWN, 0);
+
+			Sleep(100);
+
+			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_DOWN, 0);
+			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_DOWN, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_RETURN, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_RETURN, 0);
+
+			Sleep(100);
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
@@ -231,7 +285,10 @@ VOID Logout()
 
 			SendMessage(hRenderWidgetWnd, WM_KEYDOWN, VK_ESCAPE, 0);
 			SendMessage(hRenderWidgetWnd, WM_KEYUP, VK_ESCAPE, 0);
+
+			Sleep(100);
 		}
+		SetWindowPos(hSkypeWnd, 0, x, y, 0, 0, SWP_NOSIZE | SWP_NOSENDCHANGING);
 		SendMessage(hSkypeWnd, WM_CLOSE, 0, 0);
 	}
 }
